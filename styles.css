@@ -24,13 +24,23 @@ body {
 }
 
 header {
-    text-align: center;
     margin-bottom: 40px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 h1 {
     color: var(--secondary-color);
-    margin-bottom: 10px;
+    margin: 0;
+}
+
+header p {
+    text-align: center;
 }
 
 .card {
@@ -78,6 +88,13 @@ small {
     color: var(--primary-color);
 }
 
+.error-message {
+    color: #dc3545;
+    font-weight: bold;
+    display: block;
+    margin-top: 3px;
+}
+
 .checkbox-group {
     display: flex;
     align-items: center;
@@ -112,6 +129,37 @@ small {
     border-radius: 4px;
     cursor: pointer;
     margin-right: 10px;
+}
+
+.reset-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.2s;
+}
+
+.reset-btn:hover {
+    background-color: #5a6268;
+}
+
+.icon-btn {
+    background: none;
+    border: 2px solid var(--border-color);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background-color: var(--bg-color);
+    transform: scale(1.1);
 }
 
 .hidden {
@@ -158,6 +206,7 @@ code {
 .instructions ol {
     padding-left: 20px;
 }
+
 .info-card {
     border-left: 5px solid var(--primary-color);
 }
@@ -178,3 +227,38 @@ code {
     margin-bottom: 8px;
 }
 
+/* Dark Mode */
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text-color: #e0e0e0;
+    --border-color: #444444;
+}
+
+body.dark-mode h1,
+body.dark-mode h2 {
+    color: #E95420;
+}
+
+body.dark-mode input[type="text"] {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-mode .icon-btn {
+    border-color: #555;
+    color: #e0e0e0;
+}
+
+body.dark-mode .icon-btn:hover {
+    background-color: #3a3a3a;
+}
+
+body.dark-mode #outputSection {
+    background: #1e1e1e;
+}
+
+body.dark-mode pre {
+    background: #0d0d0d;
+}

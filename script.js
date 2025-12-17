@@ -1,33 +1,65 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const generateBtn = document.getElementById('generateBtn');
-    const outputSection = document.getElementById('outputSection');
-    const outputCode = document.getElementById('outputCode');
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
+  const generateBtn = document.getElementById('generateBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const outputSection = document.getElementById('outputSection');
+  const outputCode = document.getElementById('outputCode');
+  const copyBtn = document.getElementById('copyBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const downloadMetaBtn = document.getElementById('downloadMetaBtn');
 
-    generateBtn.addEventListener('click', generateConfig);
-    copyBtn.addEventListener('click', copyToClipboard);
-    downloadBtn.addEventListener('click', downloadFile);
+  generateBtn.addEventListener('click', generateConfig);
+  resetBtn.addEventListener('click', resetForm);
+  darkModeToggle.addEventListener('click', toggleDarkMode);
+  copyBtn.addEventListener('click', copyToClipboard);
+  downloadBtn.addEventListener('click', downloadFile);
+  downloadMetaBtn.addEventListener('click', downloadMetaFile);
 
-    function generateConfig() {
-        const tenantId = document.getElementById('tenantId').value.trim();
-        const clientId = document.getElementById('clientId').value.trim();
-        const hostname = document.getElementById('hostname').value.trim() || 'ubuntu-entra-device';
-        const adminUser = document.getElementById('adminUser').value.trim() || 'localadmin';
-        // Default hash for "Password123!" if empty
-        const defaultHash = '$6$rounds=4096$randomsalt$6q...'; // In a real app, we'd use a real hash or generate one.
-        // Let's use a real hash for "Password123!" for demo purposes:
-        // $6$rounds=4096$XyZ$e.g... (This is just a placeholder in the code, user should provide one)
-        // Actually, let's just use the value from the input.
-        const adminPassword = document.getElementById('adminPassword').value.trim() || '$6$rounds=4096$randomsalt$6q...';
-        const disableLocal = document.getElementById('disableLocal').checked;
+  // Load dark mode preference
+  if (localStorage.getItem('darkMode') === 'enabled') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.textContent = '☀️';
+  }
 
-        if (!tenantId || !clientId) {
-            alert('Please fill in Tenant ID and Client ID.');
-            return;
-        }
+  function generateConfig() {
+    const tenantId = document.getElementById('tenantId').value.trim();
+    const clientId = document.getElementById('clientId').value.trim();
+    const hostname = document.getElementById('hostname').value.trim() || 'ubuntu-entra-device';
+    const adminUser = document.getElementById('adminUser').value.trim() || 'localadmin';
+    const adminPassword = document.getElementById('adminPassword').value.trim() || '$6$rounds=4096$saltsalt$oPlsJhYAjdiMg2KV6rKZP7JMwLqOCPqKvdvgaLTdHh8Wl0C.YLN5HWJFPTjJKF9czcJvL8rEVKPc3VqJKvYFZ1';
+    const disableLocal = document.getElementById('disableLocal').checked;
 
-        const yaml = `#cloud-config
+    // Validate GUIDs
+    const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const tenantIdError = document.getElementById('tenantIdError');
+    const clientIdError = document.getElementById('clientIdError');
+
+    tenantIdError.textContent = '';
+    clientIdError.textContent = '';
+
+    let hasError = false;
+
+    if (!tenantId) {
+      tenantIdError.textContent = '⚠️ Tenant ID is required';
+      hasError = true;
+    } else if (!guidRegex.test(tenantId)) {
+      tenantIdError.textContent = '⚠️ Invalid GUID format';
+      hasError = true;
+    }
+
+    if (!clientId) {
+      clientIdError.textContent = '⚠️ Client ID is required';
+      hasError = true;
+    } else if (!guidRegex.test(clientId)) {
+      clientIdError.textContent = '⚠️ Invalid GUID format';
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+
+    const yaml = `#cloud-config
 autoinstall:
   version: 1
   interactive-sections:
@@ -100,32 +132,64 @@ autoinstall:
       # - reboot
 `;
 
-        outputCode.textContent = yaml;
-        outputSection.classList.remove('hidden');
-        outputSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    outputCode.textContent = yaml;
+    outputSection.classList.remove('hidden');
+    outputSection.scrollIntoView({ behavior: 'smooth' });
+  }
 
-    function copyToClipboard() {
-        const text = outputCode.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            const originalText = copyBtn.textContent;
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = originalText;
-            }, 2000);
-        });
-    }
+  function copyToClipboard() {
+    const text = outputCode.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+      }, 2000);
+    });
+  }
 
-    function downloadFile() {
-        const text = outputCode.textContent;
-        const blob = new Blob([text], { type: 'text/yaml' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'user-data';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
+  function downloadFile() {
+    const text = outputCode.textContent;
+    const blob = new Blob([text], { type: 'text/yaml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'user-data';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadMetaFile() {
+    const metaContent = 'instance-id: ubuntu-entra-' + Date.now();
+    const blob = new Blob([metaContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'meta-data';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function resetForm() {
+    document.getElementById('tenantId').value = '';
+    document.getElementById('clientId').value = '';
+    document.getElementById('hostname').value = 'ubuntu-entra-device';
+    document.getElementById('adminUser').value = 'localadmin';
+    document.getElementById('adminPassword').value = '$6$rounds=4096$saltsalt$oPlsJhYAjdiMg2KV6rKZP7JMwLqOCPqKvdvgaLTdHh8Wl0C.YLN5HWJFPTjJKF9czcJvL8rEVKPc3VqJKvYFZ1';
+    document.getElementById('disableLocal').checked = true;
+    document.getElementById('tenantIdError').textContent = '';
+    document.getElementById('clientIdError').textContent = '';
+    outputSection.classList.add('hidden');
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+  }
 });

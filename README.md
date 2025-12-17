@@ -36,7 +36,7 @@ To host this tool on GitHub Pages:
 1.  Push this folder to your GitHub repository.
 2.  Go to your repository settings -> Pages.
 3.  Select the source as the branch containing this folder.
-4.  If this is in a subfolder (like it is now), you might need to configure the build source or just access it via the direct URL path: `https://<username>.github.io/<repo-name>/01_Entra/02_EntraID_Ubuntu_Configurator/index.html`.
+4.  If this is in a subfolder (like it is now), you might need to configure the build source or just access it via the direct URL path: `https://<username>.github.io/<repo-name>/01_Entra/01_EntraID_Ubuntu_Configurator/index.html`.
 
 ## How it works
 

@@ -4,14 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ubuntu Entra ID Cloud-Init Generator</title>
+    <title>Ubuntu Entra ID Configurator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>Ubuntu Entra ID Configurator</h1>
+            <div class="header-top">
+                <h1>Ubuntu Entra ID Configurator</h1>
+                <button id="darkModeToggle" class="icon-btn" title="Toggle dark mode">🌙</button>
+            </div>
             <p>Generate a cloud-init (autoinstall) configuration to enforce Entra ID login on new Ubuntu installations.
             </p>
         </header>
@@ -51,12 +54,14 @@
                         <input type="text" id="tenantId" placeholder="e.g., 00000000-0000-0000-0000-000000000000"
                             required>
                         <small>Directory (tenant) ID from your Entra ID App Registration.</small>
+                        <small class="error-message" id="tenantIdError"></small>
                     </div>
                     <div class="form-group">
                         <label for="clientId">Client ID <span class="required">*</span></label>
                         <input type="text" id="clientId" placeholder="e.g., 11111111-1111-1111-1111-111111111111"
                             required>
                         <small>Application (client) ID from your Entra ID App Registration.</small>
+                        <small class="error-message" id="clientIdError"></small>
                     </div>
                 </section>
 
@@ -72,7 +77,8 @@
                     </div>
                     <div class="form-group">
                         <label for="adminPassword">Admin Password (SHA-512 Hash)</label>
-                        <input type="text" id="adminPassword" value="$6$rounds=4096$randomsalt$6q..."
+                        <input type="text" id="adminPassword"
+                            value="$6$rounds=4096$saltsalt$oPlsJhYAjdiMg2KV6rKZP7JMwLqOCPqKvdvgaLTdHh8Wl0C.YLN5HWJFPTjJKF9czcJvL8rEVKPc3VqJKvYFZ1"
                             placeholder="$6$...">
                         <small>Defaults to "Password123!" if left unchanged. <a href="https://www.mkpasswd.net/"
                                 target="_blank">Generate a hash here</a>.</small>
@@ -91,6 +97,7 @@
 
                 <div class="actions">
                     <button type="button" id="generateBtn" class="primary-btn">Generate Configuration</button>
+                    <button type="button" id="resetBtn" class="reset-btn">Reset Form</button>
                 </div>
             </form>
 
@@ -99,6 +106,7 @@
                 <div class="output-controls">
                     <button id="copyBtn" class="secondary-btn">Copy to Clipboard</button>
                     <button id="downloadBtn" class="secondary-btn">Download user-data</button>
+                    <button id="downloadMetaBtn" class="secondary-btn">Download meta-data</button>
                 </div>
                 <pre><code id="outputCode"></code></pre>
 
