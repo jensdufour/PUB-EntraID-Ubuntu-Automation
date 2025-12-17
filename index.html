@@ -23,14 +23,20 @@
                     <div class="instructions-content">
                         <p>Before starting, you need an App Registration in Microsoft Entra ID:</p>
                         <ol>
-                            <li><strong>Create Registration:</strong> Go to Entra ID > App registrations > New registration.
+                            <li><strong>Create Registration:</strong> Go to Entra ID > App registrations > New
+                                registration.
                                 <ul>
                                     <li>Name: <code>Ubuntu-Device-Auth</code></li>
-                                    <li>Redirect URI (Public client/native): <code>msauth://com.microsoft.identity.client.sample.local/SignatureHash</code></li>
+                                    <li>Redirect URI (Public client/native):
+                                        <code>msauth://com.microsoft.identity.client.sample.local/SignatureHash</code>
+                                    </li>
                                 </ul>
                             </li>
-                            <li><strong>Authentication:</strong> Under "Advanced settings", set "Allow public client flows" to <strong>Yes</strong>.</li>
-                            <li><strong>API Permissions:</strong> Add Microsoft Graph (Delegated): <code>openid</code>, <code>profile</code>, <code>User.Read</code>, <code>offline_access</code>. <br><strong>Grant admin consent.</strong></li>
+                            <li><strong>Authentication:</strong> Under "Advanced settings", set "Allow public client
+                                flows" to <strong>Yes</strong>.</li>
+                            <li><strong>API Permissions:</strong> Add Microsoft Graph (Delegated): <code>openid</code>,
+                                <code>profile</code>, <code>User.Read</code>, <code>offline_access</code>.
+                                <br><strong>Grant admin consent.</strong></li>
                         </ol>
                     </div>
                 </details>
