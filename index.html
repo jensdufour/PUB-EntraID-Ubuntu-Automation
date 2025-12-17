@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubuntu Entra ID Cloud-Init Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Ubuntu 24.04 Entra ID Configurator</h1>
+            <p>Generate a cloud-init (autoinstall) configuration to enforce Entra ID login on new Ubuntu installations.
+            </p>
+        </header>
+
+        <main>
+            <form id="configForm">
+                <section class="card">
+                    <h2>1. Azure Configuration</h2>
+                    <div class="form-group">
+                        <label for="tenantId">Tenant ID <span class="required">*</span></label>
+                        <input type="text" id="tenantId" placeholder="e.g., 00000000-0000-0000-0000-000000000000"
+                            required>
+                        <small>Directory (tenant) ID from your Entra ID App Registration.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientId">Client ID <span class="required">*</span></label>
+                        <input type="text" id="clientId" placeholder="e.g., 11111111-1111-1111-1111-111111111111"
+                            required>
+                        <small>Application (client) ID from your Entra ID App Registration.</small>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>2. Device Configuration</h2>
+                    <div class="form-group">
+                        <label for="hostname">Hostname</label>
+                        <input type="text" id="hostname" value="ubuntu-entra-device">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminUser">Temporary Admin Username</label>
+                        <input type="text" id="adminUser" value="localadmin">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password (SHA-512 Hash)</label>
+                        <input type="text" id="adminPassword" value="$6$rounds=4096$randomsalt$6q..."
+                            placeholder="$6$...">
+                        <small>Defaults to "Password123!" if left unchanged. <a href="https://www.mkpasswd.net/"
+                                target="_blank">Generate a hash here</a>.</small>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>3. Security Settings</h2>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="disableLocal" checked>
+                        <label for="disableLocal">Disable Local Login after Install</label>
+                    </div>
+                    <small>If checked, the local admin account will be locked immediately after setup, enforcing Entra
+                        ID login only.</small>
+                </section>
+
+                <div class="actions">
+                    <button type="button" id="generateBtn" class="primary-btn">Generate Configuration</button>
+                </div>
+            </form>
+
+            <section id="outputSection" class="hidden">
+                <h2>Generated Configuration</h2>
+                <div class="output-controls">
+                    <button id="copyBtn" class="secondary-btn">Copy to Clipboard</button>
+                    <button id="downloadBtn" class="secondary-btn">Download user-data</button>
+                </div>
+                <pre><code id="outputCode"></code></pre>
+
+                <div class="instructions">
+                    <h3>How to use</h3>
+                    <ol>
+                        <li>Save the file as <code>user-data</code> (no extension).</li>
+                        <li>Create an empty file named <code>meta-data</code>.</li>
+                        <li>Place both files in the root of a USB drive labeled <code>CIDATA</code>.</li>
+                        <li>Boot the Ubuntu installer with the USB drive plugged in.</li>
+                    </ol>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
