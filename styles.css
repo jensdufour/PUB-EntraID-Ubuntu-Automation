@@ -158,3 +158,23 @@ code {
 .instructions ol {
     padding-left: 20px;
 }
+.info-card {
+    border-left: 5px solid var(--primary-color);
+}
+
+.info-card summary {
+    cursor: pointer;
+    font-size: 1.1em;
+    color: var(--secondary-color);
+}
+
+.instructions-content {
+    margin-top: 15px;
+    padding-left: 10px;
+    border-left: 2px solid #eee;
+}
+
+.instructions-content li {
+    margin-bottom: 8px;
+}
+
